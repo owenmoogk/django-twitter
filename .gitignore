@@ -23,3 +23,4 @@
 /src/frontend/yarn-error.log*
 
 /src/main/settings.py
+/src/db.sqlite3
