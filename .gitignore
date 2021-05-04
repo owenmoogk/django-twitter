@@ -24,4 +24,5 @@
 
 /src/main/settings.py
 /src/db.sqlite3
-*.pyc
+
+__pycache__/
