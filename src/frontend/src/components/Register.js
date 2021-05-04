@@ -1,8 +1,7 @@
-import React, { Component, useState } from "react"
-import { render } from 'react-dom'
-import '../css/index.css'
+import React, { useState } from "react"
 
 export default function Register() {
+
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [passwordConfirmation, setPasswordConfirmation] = useState('')
