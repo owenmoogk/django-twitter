@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.renderers import JSONRenderer
 
 @api_view(('POST',))
-@renderer_classes((JSONRenderer,))
+# @renderer_classes((JSONRenderer,))
 def register(request):
 	
 	if request.method == "POST":
@@ -17,8 +16,6 @@ def register(request):
 
 		if not username or not password:
 			return Response({"Message": "Fill out all the fields"}, status=status.HTTP_400_BAD_REQUEST)
-
-		print('hi ok')
 
 		if User.objects.filter(username=username).exists():
 			return Response({"Message": "Username taken"}, status=status.HTTP_406_NOT_ACCEPTABLE)
