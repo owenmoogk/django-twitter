@@ -4,6 +4,9 @@ from frontend.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('', include('frontend.urls')),
 	path('users/', include('users.urls')),
+
+	# this has to be at the bottom because anything that does not match the others will be forwareded here
+	path('', include('frontend.urls')),
+	path('<path:resource>', include('frontend.urls'))
 ]
