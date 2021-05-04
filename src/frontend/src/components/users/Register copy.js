@@ -45,9 +45,12 @@ export default function Register() {
 
 	return (
 		<div>
-			<input type="text" onChange={(e) => setUsername(e.target.value)}></input>
-			<input type="text" onChange={(e) => setPassword(e.target.value)}></input>
-			<input type="text" onChange={(e) => setPasswordConfirmation(e.target.value)}></input>
+			<input type="text" onChange={(e) => setUsername(e.target.value)} placeholder='Username'></input>
+			<br/>
+			<input type="text" onChange={(e) => setPassword(e.target.value)} placeholder='Password'></input>
+			<br/>
+			<input type="text" onChange={(e) => setPasswordConfirmation(e.target.value)} placeholder='Confirm Password'></input>
+			<br/>
 			<button onClick={() => register()}>submit</button>
 			<h1>{status}</h1>
 		</div>

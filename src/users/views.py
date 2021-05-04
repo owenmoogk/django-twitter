@@ -1,64 +1,25 @@
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
+from rest_framework import permissions, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+from .serializers import UserSerializer, UserSerializerWithToken
 
-@api_view(('POST',))
-# @renderer_classes((JSONRenderer,))
-def register(request):
-	
-	if request.method == "POST":
-
-		username = request.data.get('username')
-		password = request.data.get('password')
-		passwordConfirmation = request.data.get('passwordConfirmation')
-
-		if not username or not password:
-			return Response({"Message": "Fill out all the fields"}, status=status.HTTP_400_BAD_REQUEST)
-
-		if User.objects.filter(username=username).exists():
-			return Response({"Message": "Username taken"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-		if not password == passwordConfirmation:
-			return Response({"Message": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
-
-		try:
-			user = User.objects.create_user(
-				username=username, password=password)
-			return Response({"Message": "User Created Successfully"}, status=status.HTTP_200_OK)
-		except:
-			return Response({"Message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# anytime to check if the user is logged in / when react loses its state
+@api_view(['GET'])
+def current_user(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
 
 
+class UserList(APIView):
 
-def changePassword(request):
-	if request.method == 'POST':
-		form = PasswordChangeForm(request.user, request.POST)
-		if form.is_valid():
-			user = form.save()
-			update_session_auth_hash(request, user)  # Important!
-			messages.success(
-				request, 'Your password was successfully updated!')
-			return redirect('/home/')
-		else:
-			messages.error(request, 'Please correct the error below.')
-	else:
-		form = PasswordChangeForm(request.user)
-	return render(request, 'users/change-password.html', {'form': form})
+    permission_classes = (permissions.AllowAny,)
 
-def account(request):
-
-	if request.method == "POST":
-		form = EditProfileForm(request.POST, instance=request.user)
-		if form.is_valid():
-			form.save()
-			return redirect("/home")
-	else:
-		form = EditProfileForm(instance=request.user)
-
-		return render(request, "users/account.html", {"form": form})
-
-
-def homeView(request):
-	return render(request, "home.html", {})
+    def post(self, request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,9 +1,8 @@
-from django.contrib import admin
-from django.urls import path, include
-from .views import *
+
+from django.urls import path
+from .views import current_user, UserList
 
 urlpatterns = [
-    # path('login/', login),
-	# path('logout/', logout),
-	path('register/', register)
+    path('current_user/', current_user),
+    path('users/', UserList.as_view())
 ]
