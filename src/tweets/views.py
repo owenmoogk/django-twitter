@@ -26,12 +26,17 @@ def Tweets(request):
 	data = []
 
 	try:
-		for tweet in Tweet.objects.all():
-			data.append({
-				"id": tweet.id,
-				'content': tweet.content,
-			})
+		tweets = Tweet.objects.all()
+		for tweet in tweets:
+			data.append(TweetToDict(tweet))
 		return Response(data, status=status.HTTP_200_OK)
 	except:
 		data["message"] = "server error"
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
+
+def TweetToDict(tweet):
+	return({
+		'id': tweet.id,
+		'content': tweet.content,
+		'user': tweet.user.username,
+	})
