@@ -18,3 +18,20 @@ def TweetDetails(request, tweet_id):
 	except:
 		data["message"] = "not found"
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(("GET",))
+def Tweets(request):
+	
+	data = []
+
+	try:
+		for tweet in Tweet.objects.all():
+			data.append({
+				"id": tweet.id,
+				'content': tweet.content,
+			})
+		return Response(data, status=status.HTTP_200_OK)
+	except:
+		data["message"] = "server error"
+		return Response(data, status=status.HTTP_404_NOT_FOUND)

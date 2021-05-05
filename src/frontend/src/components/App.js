@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Nav from './nav/Nav';
 import LoginForm from './users/Login';
 import Register from './users/Register';
+import Tweetpage from './tweet/Tweetpage'
+import Homepage from './homepage/Homepage'
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -44,13 +46,18 @@ export default function App() {
 			/>
 			<Router>
 				<Switch>
-					{/* <Route exact path='/' component={HomePage}/> */}
 					<Route path='/login'>
 						<LoginForm setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
 					<Route path='/signup'>
 						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
+					<Route path='/tweet/:id' children={<Tweetpage />} />
+
+					<Route path='/'>
+						<Homepage/>
+					</Route>
+
 				</Switch>
 			</Router>
 		</div>
