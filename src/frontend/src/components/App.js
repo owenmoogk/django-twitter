@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Nav from './nav/Nav';
 import LoginForm from './users/Login';
-import SignupForm from './users/Register';
+import Register from './users/Register';
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route
+} from 'react-router-dom'
 
-// all the user stuff... massive props
+// all the user stuff... massive props to
 // https://medium.com/@dakota.lillie/django-react-jwt-authentication-5015ee00ef9a
 
 export default function App() {
 
-	const [displayed_form, set_displayed_form] = useState("")
-	const [logged_in, setLoggedIn] = useState(localStorage.getItem('token') ? true : false)
+	const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') ? true : false)
 	const [username, setUsername] = useState('')
 
 	useEffect(() => {
-		if (logged_in) {
+		if (loggedIn) {
 			fetch('/users/current_user/', {
 				headers: {
 					Authorization: `JWT ${localStorage.getItem('token')}`
@@ -25,47 +29,30 @@ export default function App() {
 				});
 		}
 	});
-
-	const clearDisplayForm = () => {
-		set_displayed_form('')
-	}
 	
-	const handle_logout = () => {
+	const handleLogout = () => {
 		localStorage.removeItem('token');
 		setLoggedIn(false)
 		setUsername('')
 	};
 
-	const display_form = form => {
-		set_displayed_form(form)
-	};
-
-	let form;
-	switch (displayed_form) {
-		case 'login':
-			form = <LoginForm clearDisplayForm={clearDisplayForm} setLoggedIn={setLoggedIn}/>;
-			break;
-		case 'signup':
-			form = <SignupForm clearDisplayForm={clearDisplayForm} setLoggedIn={setLoggedIn} />;
-			break;
-		default:
-			form = null;
-	}
-
 	return (
 		<div className="App">
 			<Nav
-				logged_in={logged_in}
-				display_form={display_form}
-				handle_logout={handle_logout}
+				loggedIn={loggedIn}
+				handleLogout={handleLogout}
 			/>
-			{form}
-			<h3>
-				{logged_in
-					? `Hello, ${username}`
-					: 'Please Log In'
-				}
-			</h3>
+			<Router>
+				<Switch>
+					{/* <Route exact path='/' component={HomePage}/> */}
+					<Route path='/login'>
+						<LoginForm setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+					</Route>
+					<Route path='/signup'>
+						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+					</Route>
+				</Switch>
+			</Router>
 		</div>
 	);
 }

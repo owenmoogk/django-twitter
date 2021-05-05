@@ -1,24 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 export default function Nav(props) {
-	const logged_out_nav = (
+	const loggedOutNav = (
+		<div>
+			<a href='/login'><p>Login</p></a>
+			<a href='/signup'><p>Signup</p></a>
+		</div>
+	);
+
+	const loggedInNav = (
 		<ul>
-			<li onClick={() => props.display_form('login')}>login</li>
-			<li onClick={() => props.display_form('signup')}>signup</li>
+			<li onClick={props.handleLogout}>Logout</li>
 		</ul>
 	);
 
-	const logged_in_nav = (
-		<ul>
-			<li onClick={props.handle_logout}>logout</li>
-		</ul>
-	);
-	return <div>{props.logged_in ? logged_in_nav : logged_out_nav}</div>;
+	return <div>{props.loggedIn ? loggedInNav : loggedOutNav}</div>;
 }
-
-Nav.propTypes = {
-	logged_in: PropTypes.bool.isRequired,
-	display_form: PropTypes.func.isRequired,
-	handle_logout: PropTypes.func.isRequired
-};

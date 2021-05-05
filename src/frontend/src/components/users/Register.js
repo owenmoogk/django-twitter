@@ -41,8 +41,8 @@ export default function Register(props) {
 				if (json.token){
 					localStorage.setItem('token', json.token);
 					props.setLoggedIn(true)
-					props.clearDisplayForm()
-					setUsername(json.username)	
+					setUsername(json.username)
+					window.location.replace('/')
 				}
 				else{
 					// https://www.geeksforgeeks.org/how-to-get-the-first-key-name-of-a-javascript-object/
@@ -56,35 +56,54 @@ export default function Register(props) {
 			});
 	};
 
+	function notLoggedInPage(){
+		return(
+			<div>
+				<form onSubmit={e => handleSignup(e, {username:username, password:password}, passwordConfirm)}>
+					<h4>Sign Up</h4>
+					<label htmlFor="username">Username</label>
+					<input
+						type="text"
+						name="username"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+					/>
+					<label htmlFor="password">Password</label>
+					<input
+						type="password"
+						name="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+					/>
+					<label htmlFor="password">Confirm Password</label>
+					<input
+						type="password"
+						name="passwordConfirm"
+						value={passwordConfirm}
+						onChange={(e) => setpasswordConfirm(e.target.value)}
+					/>
+					<input type="submit" />
+				</form>
+				<br/>
+				<h2>{message}</h2>
+			</div>
+		)
+	}
+	
+	function loggedInPage(){
+		return(
+			<div>
+				<h2>{"You are logged in as "+props.username}</h2>
+			</div>
+		)
+	}
+
 	return (
 		<div>
-			<form onSubmit={e => handleSignup(e, {username:username, password:password}, passwordConfirm)}>
-				<h4>Sign Up</h4>
-				<label htmlFor="username">Username</label>
-				<input
-					type="text"
-					name="username"
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-				/>
-				<label htmlFor="password">Password</label>
-				<input
-					type="password"
-					name="password"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-				/>
-				<label htmlFor="password">Confirm Password</label>
-				<input
-					type="password"
-					name="passwordConfirm"
-					value={passwordConfirm}
-					onChange={(e) => setpasswordConfirm(e.target.value)}
-				/>
-				<input type="submit" />
-			</form>
-			<br/>
-			<h2>{message}</h2>
+		{props.loggedIn
+			? loggedInPage()
+			: notLoggedInPage()
+		}
 		</div>
 	);
 }
