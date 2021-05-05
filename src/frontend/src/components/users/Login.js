@@ -1,46 +1,63 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-export default class Login extends React.Component {
-	state = {
-		username: '',
-		password: ''
+export default function Login(props) {
+
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
+	const [message, setMessage] = useState('')
+
+	const handleLogin = (e, data) => {
+		e.preventDefault();
+		fetch('/token-auth/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.token){
+					localStorage.setItem('token', json.token);
+					props.setLoggedIn(true)
+					props.clearDisplayForm()
+					setUsername(json.user.username)
+				}
+				else{
+					// https://www.geeksforgeeks.org/how-to-get-the-first-key-name-of-a-javascript-object/
+					var key;
+					for (var k in json) {
+						key = k;
+						break;
+					}
+					setMessage(json[key][0])
+				}
+			});
 	};
 
-	handle_change = e => {
-		const name = e.target.name;
-		const value = e.target.value;
-		this.setState(prevstate => {
-			const newState = { ...prevstate };
-			newState[name] = value;
-			return newState;
-		});
-	};
-
-	render() {
-		return (
-			<form onSubmit={e => this.props.handle_login(e, this.state)}>
+	return (
+		<div>
+			<form onSubmit={e => handleLogin(e, {username:username, password:password})}>
 				<h4>Log In</h4>
 				<label htmlFor="username">Username</label>
 				<input
 					type="text"
 					name="username"
-					value={this.state.username}
-					onChange={this.handle_change}
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
 				/>
 				<label htmlFor="password">Password</label>
 				<input
 					type="password"
 					name="password"
-					value={this.state.password}
-					onChange={this.handle_change}
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<input type="submit" />
 			</form>
-		);
-	}
-}
+			<br/>
+			<h2>{message}</h2>
+		</div>
+	);
 
-Login.propTypes = {
-	handle_login: PropTypes.func.isRequired
-};
+}

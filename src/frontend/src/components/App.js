@@ -1,22 +1,19 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Nav from './nav/Nav';
 import LoginForm from './users/Login';
 import SignupForm from './users/Register';
 
+// all the user stuff... massive props
 // https://medium.com/@dakota.lillie/django-react-jwt-authentication-5015ee00ef9a
 
-class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			displayed_form: '',
-			logged_in: localStorage.getItem('token') ? true : false,
-			username: ''
-		};
-	}
+export default function App() {
 
-	componentDidMount() {
-		if (this.state.logged_in) {
+	const [displayed_form, set_displayed_form] = useState("")
+	const [logged_in, setLoggedIn] = useState(localStorage.getItem('token') ? true : false)
+	const [username, setUsername] = useState('')
+
+	useEffect(() => {
+		if (logged_in) {
 			fetch('/users/current_user/', {
 				headers: {
 					Authorization: `JWT ${localStorage.getItem('token')}`
@@ -24,91 +21,51 @@ class App extends Component {
 			})
 				.then(res => res.json())
 				.then(json => {
-					this.setState({ username: json.username });
+					setUsername(json.username)
 				});
 		}
+	});
+
+	const clearDisplayForm = () => {
+		set_displayed_form('')
 	}
-
-	handle_login = (e, data) => {
-		e.preventDefault();
-		fetch('/token-auth/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-			.then(res => res.json())
-			.then(json => {
-				localStorage.setItem('token', json.token);
-				this.setState({
-					logged_in: true,
-					displayed_form: '',
-					username: json.user.username
-				});
-			});
-	};
-
-	handle_signup = (e, data) => {
-		e.preventDefault();
-		fetch('/users/users/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-			.then(res => res.json())
-			.then(json => {
-				localStorage.setItem('token', json.token);
-				this.setState({
-					logged_in: true,
-					displayed_form: '',
-					username: json.username
-				});
-			});
-	};
-
-	handle_logout = () => {
+	
+	const handle_logout = () => {
 		localStorage.removeItem('token');
-		this.setState({ logged_in: false, username: '' });
+		setLoggedIn(false)
+		setUsername('')
 	};
 
-	display_form = form => {
-		this.setState({
-			displayed_form: form
-		});
+	const display_form = form => {
+		set_displayed_form(form)
 	};
 
-	render() {
-		let form;
-		switch (this.state.displayed_form) {
-			case 'login':
-				form = <LoginForm handle_login={this.handle_login} />;
-				break;
-			case 'signup':
-				form = <SignupForm handle_signup={this.handle_signup} />;
-				break;
-			default:
-				form = null;
-		}
-
-		return (
-			<div className="App">
-				<Nav
-					logged_in={this.state.logged_in}
-					display_form={this.display_form}
-					handle_logout={this.handle_logout}
-				/>
-				{form}
-				<h3>
-					{this.state.logged_in
-						? `Hello, ${this.state.username}`
-						: 'Please Log In'}
-				</h3>
-			</div>
-		);
+	let form;
+	switch (displayed_form) {
+		case 'login':
+			form = <LoginForm clearDisplayForm={clearDisplayForm} setLoggedIn={setLoggedIn}/>;
+			break;
+		case 'signup':
+			form = <SignupForm clearDisplayForm={clearDisplayForm} setLoggedIn={setLoggedIn} />;
+			break;
+		default:
+			form = null;
 	}
-}
 
-export default App;
+	return (
+		<div className="App">
+			<Nav
+				logged_in={logged_in}
+				display_form={display_form}
+				handle_logout={handle_logout}
+			/>
+			{form}
+			<h3>
+				{logged_in
+					? `Hello, ${username}`
+					: 'Please Log In'
+				}
+			</h3>
+		</div>
+	);
+}

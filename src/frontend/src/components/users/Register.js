@@ -1,46 +1,90 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-export default class Register extends React.Component {
-	state = {
-		username: '',
-		password: ''
+export default function Register(props) {
+	
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
+	const [passwordConfirm, setpasswordConfirm] = useState('')
+	const [message, setMessage] = useState('')
+
+	function getCookie(name) {
+		if (!document.cookie) {
+			return null;
+		}
+
+		const xsrfCookies = document.cookie.split(';')
+			.map(c => c.trim())
+			.filter(c => c.startsWith(name + '='));
+
+		if (xsrfCookies.length === 0) {
+			return null;
+		}
+		return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+	}
+
+	const handleSignup = (e, data, passwordConfirm) => {
+		e.preventDefault();
+		if (data.password != passwordConfirm){
+			setMessage("Passwords do not match")
+			return
+		}
+		fetch('/users/users/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify(data)
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.token){
+					localStorage.setItem('token', json.token);
+					props.setLoggedIn(true)
+					props.clearDisplayForm()
+					setUsername(json.username)	
+				}
+				else{
+					// https://www.geeksforgeeks.org/how-to-get-the-first-key-name-of-a-javascript-object/
+					var key;
+					for (var k in json) {
+						key = k;
+						break;
+					}
+					setMessage(json[key][0])
+				}
+			});
 	};
 
-	handle_change = e => {
-		const name = e.target.name;
-		const value = e.target.value;
-		this.setState(prevstate => {
-			const newState = { ...prevstate };
-			newState[name] = value;
-			return newState;
-		});
-	};
-
-	render() {
-		return (
-			<form onSubmit={e => this.props.handle_signup(e, this.state)}>
+	return (
+		<div>
+			<form onSubmit={e => handleSignup(e, {username:username, password:password}, passwordConfirm)}>
 				<h4>Sign Up</h4>
 				<label htmlFor="username">Username</label>
 				<input
 					type="text"
 					name="username"
-					value={this.state.username}
-					onChange={this.handle_change}
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
 				/>
 				<label htmlFor="password">Password</label>
 				<input
 					type="password"
 					name="password"
-					value={this.state.password}
-					onChange={this.handle_change}
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+				<label htmlFor="password">Confirm Password</label>
+				<input
+					type="password"
+					name="passwordConfirm"
+					value={passwordConfirm}
+					onChange={(e) => setpasswordConfirm(e.target.value)}
 				/>
 				<input type="submit" />
 			</form>
-		);
-	}
+			<br/>
+			<h2>{message}</h2>
+		</div>
+	);
 }
-
-Register.propTypes = {
-	handle_signup: PropTypes.func.isRequired
-};
