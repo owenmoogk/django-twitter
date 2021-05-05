@@ -11,6 +11,7 @@ export default function Homepage(props){
 		fetch("/tweets/tweets/")
 			.then(res => res.json())
 			.then(json => {
+				// https://flaviocopes.com/react-how-to-loop/
 				for (const [index, value] of json.entries()){
 					console.log(index, value)
 					returnData.push(<Tweet key={index} content={value.content} />)
