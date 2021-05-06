@@ -9,9 +9,10 @@ export default function Nav(props) {
 	);
 
 	const loggedInNav = (
-		<ul>
-			<li onClick={props.handleLogout}>Logout</li>
-		</ul>
+		<div>
+			<a onClick={props.handleLogout}><p>Logout</p></a>
+			<a href='/compose'><p>Compose</p></a>
+		</div>
 	);
 
 	return <div>{props.loggedIn ? loggedInNav : loggedOutNav}</div>;

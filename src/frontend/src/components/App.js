@@ -4,6 +4,7 @@ import LoginForm from './users/Login';
 import Register from './users/Register';
 import Tweetpage from './tweet/Tweetpage'
 import Homepage from './homepage/Homepage'
+import Compose from './compose/Compose'
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -31,7 +32,7 @@ export default function App() {
 				});
 		}
 	});
-	
+
 	const handleLogout = () => {
 		localStorage.removeItem('token');
 		setLoggedIn(false)
@@ -40,6 +41,7 @@ export default function App() {
 
 	return (
 		<div className="App">
+			<h1>{username}</h1>
 			<Nav
 				loggedIn={loggedIn}
 				handleLogout={handleLogout}
@@ -47,14 +49,16 @@ export default function App() {
 			<Router>
 				<Switch>
 					<Route path='/login'>
-						<LoginForm setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+						<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
 					<Route path='/signup'>
 						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
 					<Route path='/tweet/:id' children={<Tweetpage />} />
-
-					<Route path='/'>
+					<Route path="/compose">
+						<Compose />
+					</Route>
+					<Route exact path='/'>
 						<Homepage/>
 					</Route>
 

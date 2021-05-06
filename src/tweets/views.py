@@ -40,3 +40,13 @@ def TweetToDict(tweet):
 		'content': tweet.content,
 		'user': tweet.user.username,
 	})
+
+@api_view(("POST",))
+def Compose(request):
+
+	try:
+		tweet = Tweet(user=request.user, content=request.data.get('content'))
+		tweet.save()
+		return Response({}, status=status.HTTP_201_CREATED)
+	except:
+		return Response({"message":"There was an error creating tweet. Please try logging out and back in again."}, status=status.HTTP_403_FORBIDDEN)
