@@ -13,7 +13,6 @@ export default function Homepage(props){
 			.then(json => {
 				// https://flaviocopes.com/react-how-to-loop/
 				for (const [index, value] of json.entries()){
-					console.log(index, value)
 					returnData.push(<Tweet key={index} data={value} />)
 				}
 				setTweets(returnData)
