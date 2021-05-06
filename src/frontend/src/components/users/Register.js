@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {getCookie} from '../CSRF.js'
 
 export default function Register(props) {
 	
@@ -6,21 +7,6 @@ export default function Register(props) {
 	const [password, setPassword] = useState('')
 	const [passwordConfirm, setpasswordConfirm] = useState('')
 	const [message, setMessage] = useState('')
-
-	function getCookie(name) {
-		if (!document.cookie) {
-			return null;
-		}
-
-		const xsrfCookies = document.cookie.split(';')
-			.map(c => c.trim())
-			.filter(c => c.startsWith(name + '='));
-
-		if (xsrfCookies.length === 0) {
-			return null;
-		}
-		return decodeURIComponent(xsrfCookies[0].split('=')[1]);
-	}
 
 	const handleSignup = (e, data, passwordConfirm) => {
 		e.preventDefault();

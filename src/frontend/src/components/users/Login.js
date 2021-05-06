@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {getCookie} from '../CSRF.js'
 
 export default function Login(props) {
 
@@ -11,7 +12,8 @@ export default function Login(props) {
 		fetch('/token-auth/', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCookie('csrftoken')
 			},
 			body: JSON.stringify(data)
 		})
@@ -20,7 +22,7 @@ export default function Login(props) {
 				if (json.token){
 					localStorage.setItem('token', json.token);
 					props.setLoggedIn(true)
-					setUsername(json.user.username)
+					props.setUsername(json.user.username)
 					window.location.replace('/')
 				}
 				else{

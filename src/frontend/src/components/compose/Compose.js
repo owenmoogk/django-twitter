@@ -5,21 +5,6 @@ export default function Compose(props) {
 	const [content, setContent] = useState('')
 	const [message, setMessage] = useState('')
 
-	function getCookie(name) {
-		if (!document.cookie) {
-			return null;
-		}
-
-		const xsrfCookies = document.cookie.split(';')
-			.map(c => c.trim())
-			.filter(c => c.startsWith(name + '='));
-
-		if (xsrfCookies.length === 0) {
-			return null;
-		}
-		return decodeURIComponent(xsrfCookies[0].split('=')[1]);
-	}
-
 	function composeTweet(e, data) {
 		e.preventDefault();
 		fetch('/tweets/compose/', {
