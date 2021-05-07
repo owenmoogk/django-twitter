@@ -1,0 +1,49 @@
+*{
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
+body{
+	background-color: rgb(30, 30, 30);
+	color: white;
+}
+
+/* highlights */
+
+::selection {
+	background: grey;
+	color: black;
+}
+
+/* scrollbar */
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: grey;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: lightslategrey;
+}
+
+.App{
+	display: flex;
+}
+
+#leftBar{
+	flex: 3;
+}
+
+#mainPage{
+	flex: 5;
+}
+#rightBar{
+	flex: 3;
+}
+
+#leftBar a{
+	color: #1DA1F2;
+	text-decoration: none;
+}
