@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Tweet from './Tweet'
+import './homepage.css'
 
 export default function Homepage(props){
 
@@ -25,7 +26,7 @@ export default function Homepage(props){
 
 
 	return(
-		<div>
+		<div id="homeTweets">
 			{tweets}
 		</div>
 	)

@@ -41,29 +41,34 @@ export default function App() {
 
 	return (
 		<div className="App">
-			<h1>{username}</h1>
-			<Nav
-				loggedIn={loggedIn}
-				handleLogout={handleLogout}
-			/>
-			<Router>
-				<Switch>
-					<Route path='/login'>
-						<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-					</Route>
-					<Route path='/signup'>
-						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-					</Route>
-					<Route path='/tweet/:id' children={<Tweetpage />} />
-					<Route path="/compose">
-						<Compose />
-					</Route>
-					<Route exact path='/'>
-						<Homepage/>
-					</Route>
+			<div id="leftBar">
+				<Nav
+					loggedIn={loggedIn}
+					handleLogout={handleLogout}
+					username={username}
+				/>
+			</div>
+			<div id='mainPage'>
+				<Router>
+					<Switch>
+						<Route path='/login'>
+							<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+						</Route>
+						<Route path='/signup'>
+							<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+						</Route>
+						<Route path='/tweet/:id' children={<Tweetpage />} />
+						<Route path="/compose">
+							<Compose />
+						</Route>
+						<Route exact path='/'>
+							<Homepage/>
+						</Route>
 
-				</Switch>
-			</Router>
+					</Switch>
+				</Router>
+			</div>
+			<div id="rightBar"></div>
 		</div>
 	);
 }

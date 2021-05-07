@@ -54,6 +54,7 @@ export default function Register(props) {
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 					/>
+					<br/>
 					<label htmlFor="password">Password</label>
 					<input
 						type="password"
@@ -61,6 +62,7 @@ export default function Register(props) {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
+					<br/>
 					<label htmlFor="password">Confirm Password</label>
 					<input
 						type="password"
@@ -68,6 +70,7 @@ export default function Register(props) {
 						value={passwordConfirm}
 						onChange={(e) => setpasswordConfirm(e.target.value)}
 					/>
+					<br/>
 					<input type="submit" />
 				</form>
 				<br/>

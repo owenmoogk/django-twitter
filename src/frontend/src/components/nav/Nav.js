@@ -10,8 +10,10 @@ export default function Nav(props) {
 
 	const loggedInNav = (
 		<div>
+			<a href='/'>Home</a>
 			<a onClick={props.handleLogout}><p>Logout</p></a>
 			<a href='/compose'><p>Compose</p></a>
+			<a href="/profile"><p>{props.username}</p></a>
 		</div>
 	);
 

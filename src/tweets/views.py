@@ -1,22 +1,22 @@
 from .models import Tweet
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.decorators import api_view
-from rest_framework import serializers
+import datetime
+
 
 @api_view(('GET',))
 def TweetDetails(request, tweet_id):
 
-	data={
-		'tweet_id': tweet_id
-	}
-
 	try:
-		obj = Tweet.objects.get(id = tweet_id)
-		data['content'] = obj.content
+		tweet = Tweet.objects.get(id = tweet_id)
+		data = TweetToDict(tweet)
 		return Response(data, status=status.HTTP_200_OK)
-	except:
-		data["message"] = "not found"
+	except Exception as e:
+		data={
+			'tweet_id': tweet_id,
+			'message': 'not found'
+		}
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -26,7 +26,10 @@ def Tweets(request):
 	data = []
 
 	try:
-		tweets = Tweet.objects.all()
+		tweets = list(Tweet.objects.all())
+		print(tweets)
+		tweets.reverse()
+		print(tweets)
 		for tweet in tweets:
 			data.append(TweetToDict(tweet))
 		return Response(data, status=status.HTTP_200_OK)
@@ -35,10 +38,18 @@ def Tweets(request):
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
 
 def TweetToDict(tweet):
+
+	# processing the day into a string
+	time = str(tweet.time.strftime('%b')) + " " + str(tweet.time.day)
+	if tweet.time.year != datetime.datetime.now().year:
+		time += " "+str(tweet.time.year)
+	
+
 	return({
 		'id': tweet.id,
 		'content': tweet.content,
 		'user': tweet.user.username,
+		'time': time,
 	})
 
 @api_view(("POST",))

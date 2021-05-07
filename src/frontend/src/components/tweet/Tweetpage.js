@@ -1,25 +1,29 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 
 export default function Tweetpage(props){
 	
-	const [content, setContent] = useState('')
+	const [data, setContent] = useState('')
 	let { id } = useParams();
 
 	function getTweet(tweetId) {
 		fetch("/tweets/tweet/"+tweetId+"/")
 			.then(res => res.json())
 			.then(json => {
-				setContent(json.content)
+				console.log(json)
+				setContent(json)
 			});
 	}
 
-	getTweet(id)
+	useEffect(() => {
+		getTweet(id)
+	}, [])
 
 
 	return(
-		<div>
-			<h1>{content}</h1>
+		<div className='tweet'>
+			<p><span className='username'>@{data.user}</span> • <span className='time'>{data.time}</span></p>
+			<p id='tweetContent'>{data.content}</p>
 		</div>
 	)
 }

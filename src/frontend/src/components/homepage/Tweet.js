@@ -3,9 +3,12 @@ import React, { useState } from "react"
 export default function Tweet(props){
 
 	return(
-		<div>
-			<h1>{props.data.content}</h1>
-			<h4>{props.data.user}</h4>
-		</div>
+		<a href={"/tweet/"+props.data.id} className="tweetLink">
+			<div className='tweet'>
+				<p><span className='username'>@{props.data.user}</span> • <span className='time'>{props.data.time}</span></p>
+				<p id='tweetContent'>{props.data.content}</p>
+			</div>
+		</a>
+		
 	)
 }

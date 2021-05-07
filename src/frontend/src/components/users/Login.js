@@ -39,7 +39,7 @@ export default function Login(props) {
 
 	function notLoggedInPage(){
 		return(
-			<div>
+			<div id='loginForm'>
 				<form onSubmit={e => handleLogin(e, {username:username, password:password})}>
 					<h4>Log In</h4>
 					<label htmlFor="username">Username</label>
@@ -49,6 +49,7 @@ export default function Login(props) {
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 					/>
+					<br/>
 					<label htmlFor="password">Password</label>
 					<input
 						type="password"
@@ -56,6 +57,7 @@ export default function Login(props) {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
+					<br/>
 					<input type="submit" />
 				</form>
 				<br/>
