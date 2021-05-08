@@ -27,9 +27,7 @@ def Tweets(request):
 
 	try:
 		tweets = list(Tweet.objects.all())
-		print(tweets)
 		tweets.reverse()
-		print(tweets)
 		for tweet in tweets:
 			data.append(TweetToDict(tweet))
 		return Response(data, status=status.HTTP_200_OK)
@@ -56,8 +54,26 @@ def TweetToDict(tweet):
 def Compose(request):
 
 	try:
+		content = request.data.get('content')
+		if len(content) == 0:
+			return Response({'message': "This field cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
 		tweet = Tweet(user=request.user, content=request.data.get('content'))
 		tweet.save()
 		return Response({}, status=status.HTTP_201_CREATED)
 	except:
 		return Response({"message":"There was an error creating tweet. Please try logging out and back in again."}, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(('POST',))
+def Delete(request):
+	userId = request.user.id
+	tweetId = request.data.get('tweetId')
+	
+	try:
+		tweet = Tweet.objects.get(id = tweetId)
+		if tweet.user.id == userId:
+			tweet.delete()
+			return Response({}, status=status.HTTP_200_OK)
+		else:
+			return Response({"message":"You must own this tweet to delete it"}, status=status.HTTP_403_FORBIDDEN)
+	except:
+		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
