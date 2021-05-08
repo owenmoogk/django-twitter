@@ -28,7 +28,12 @@ export default function App() {
 			})
 				.then(res => res.json())
 				.then(json => {
-					setUsername(json.username)
+					if (json.username){
+						setUsername(json.username)
+					}
+					else{
+						handleLogout()
+					}
 				});
 		}
 	});
@@ -40,6 +45,7 @@ export default function App() {
 	};
 
 	return (
+		<Router>
 		<div className="App">
 			<div id="leftBar">
 				<Nav
@@ -49,26 +55,24 @@ export default function App() {
 				/>
 			</div>
 			<div id='mainPage'>
-				<Router>
-					<Switch>
-						<Route path='/login'>
-							<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-						</Route>
-						<Route path='/signup'>
-							<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-						</Route>
-						<Route path='/tweet/:id' children={<Tweetpage />} />
-						<Route path="/compose">
-							<Compose />
-						</Route>
-						<Route exact path='/'>
-							<Homepage/>
-						</Route>
-
-					</Switch>
-				</Router>
+				<Switch>
+					<Route path='/login'>
+						<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+					</Route>
+					<Route path='/signup'>
+						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+					</Route>
+					<Route path='/tweet/:id' children={<Tweetpage />} />
+					<Route path="/compose">
+						<Compose />
+					</Route>
+					<Route exact path='/'>
+						<Homepage/>
+					</Route>
+				</Switch>
 			</div>
 			<div id="rightBar"></div>
 		</div>
+		</Router>
 	);
 }
