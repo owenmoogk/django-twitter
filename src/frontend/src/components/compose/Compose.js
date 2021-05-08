@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import './compose.css'
 
 export default function Compose(props) {
 
@@ -27,15 +28,17 @@ export default function Compose(props) {
 	};
 
 	return (
-		<div>
+		<div id='compose'>
 			<form onSubmit={e => composeTweet(e, { content: content })}>
-				<input
-					type='text'
+				<textarea
+					maxLength="256"
 					onChange={(e) => setContent(e.target.value)}
 					value={content}
+					placeholder="What's happening..."
 				>
-				</input>
-				<input type='submit' />
+				</textarea>
+				<br/>
+				<input type='submit' value="Post tweet"/>
 			</form>
 			<h2>{message}</h2>
 		</div>
