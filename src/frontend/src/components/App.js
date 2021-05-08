@@ -62,7 +62,7 @@ export default function App() {
 					<Route path='/signup'>
 						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
-					<Route path='/tweet/:id' children={<Tweetpage />} />
+					<Route path='/tweet/:id' children={<Tweetpage username={username}/>} />
 					<Route path="/compose">
 						<Compose />
 					</Route>
