@@ -12,7 +12,7 @@ def TweetDetails(request, tweet_id):
 		tweet = Tweet.objects.get(id = tweet_id)
 		data = TweetToDict(tweet)
 		return Response(data, status=status.HTTP_200_OK)
-	except Exception as e:
+	except:
 		data={
 			'tweet_id': tweet_id,
 			'message': 'not found'
