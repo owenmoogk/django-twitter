@@ -1,21 +1,29 @@
 import React from 'react';
+import './nav.css'
+import {Link} from 'react-router-dom'
 
 export default function Nav(props) {
 	const loggedOutNav = (
-		<div>
-			<a href='/login'><p>Login</p></a>
-			<a href='/signup'><p>Signup</p></a>
+		<div id='nav'>
+			<Link to='/login'>Login</Link>
+			<Link to='/signup'>Signup</Link>
 		</div>
 	);
 
 	const loggedInNav = (
-		<div>
-			<a href='/'>Home</a>
-			<a onClick={props.handleLogout}><p>Logout</p></a>
-			<a href='/compose'><p>Compose</p></a>
-			<a href="/profile"><p>{props.username}</p></a>
+		<div id='nav'>
+			<Link to='/'>Home</Link>
+			<a onClick={props.handleLogout}>Logout</a>
+			<Link to='/compose'>Compose</Link>
+			<Link to="/profile">{props.username}</Link>
 		</div>
 	);
 
-	return <div>{props.loggedIn ? loggedInNav : loggedOutNav}</div>;
+	return (
+		<div>
+			{props.loggedIn 
+			? loggedInNav 
+			: loggedOutNav}
+		</div>
+	);
 }

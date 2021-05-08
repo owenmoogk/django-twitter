@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom'
 export default function Tweetpage(props){
 	
 	const [data, setContent] = useState('')
-	let { id } = useParams();
+	let {id} = useParams();
 
 	function getTweet(tweetId) {
 		fetch("/tweets/tweet/"+tweetId+"/")

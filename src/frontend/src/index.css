@@ -42,8 +42,3 @@ body{
 #rightBar{
 	flex: 3;
 }
-
-#leftBar a{
-	color: #1DA1F2;
-	text-decoration: none;
-}
