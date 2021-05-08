@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {getCookie} from '../CSRF.js'
+import './auth.css'
 
 export default function Register(props) {
 	
@@ -47,33 +48,51 @@ export default function Register(props) {
 			<div>
 				<form onSubmit={e => handleSignup(e, {username:username, password:password}, passwordConfirm)}>
 					<h4>Sign Up</h4>
-					<label htmlFor="username">Username</label>
-					<input
-						type="text"
-						name="username"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-					/>
-					<br/>
-					<label htmlFor="password">Password</label>
-					<input
-						type="password"
-						name="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-					<br/>
-					<label htmlFor="password">Confirm Password</label>
-					<input
-						type="password"
-						name="passwordConfirm"
-						value={passwordConfirm}
-						onChange={(e) => setpasswordConfirm(e.target.value)}
-					/>
-					<br/>
+					<table>
+						<tbody>
+							<tr>
+								<td>
+									<label htmlFor="username">Username</label>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="username"
+										value={username}
+										onChange={(e) => setUsername(e.target.value)}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label htmlFor="password">Password</label>
+								</td>
+								<td>
+									<input
+										type="password"
+										name="password"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label htmlFor="password">Confirm Password</label>
+								</td>
+								<td>
+								<input
+									type="password"
+									name="passwordConfirm"
+									value={passwordConfirm}
+									onChange={(e) => setpasswordConfirm(e.target.value)}
+								/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 					<input type="submit" />
 				</form>
-				<br/>
 				<h2>{message}</h2>
 			</div>
 		)

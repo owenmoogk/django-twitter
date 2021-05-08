@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {getCookie} from '../CSRF.js'
+import './auth.css'
 
 export default function Login(props) {
 
@@ -41,26 +42,40 @@ export default function Login(props) {
 		return(
 			<div id='loginForm'>
 				<form onSubmit={e => handleLogin(e, {username:username, password:password})}>
-					<h4>Log In</h4>
-					<label htmlFor="username">Username</label>
-					<input
-						type="text"
-						name="username"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-					/>
-					<br/>
-					<label htmlFor="password">Password</label>
-					<input
-						type="password"
-						name="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
+					<h2>Log In</h2>
+					<table>
+						<tbody>
+							<tr>
+								<td>
+									<label htmlFor="username">Username</label>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="username"
+										value={username}
+										onChange={(e) => setUsername(e.target.value)}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label htmlFor="password">Password</label>
+								</td>
+								<td>
+									<input
+										type="password"
+										name="password"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+									/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 					<br/>
 					<input type="submit" />
 				</form>
-				<br/>
 				<h2>{message}</h2>
 			</div>
 		)
