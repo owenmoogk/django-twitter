@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
+from .models import *
 
 # anytime to check if the user is logged in / when react loses its state
 @api_view(['GET'])
@@ -23,3 +24,41 @@ class UserList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def Follow(request):
+	userData = initUserData(request)
+	username = request.data.get('username')
+	if username not in userData.following:
+		userData.following.append(username)
+		userData.save()
+	return Response(userData.following, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def Unfollow(request):
+	userData = initUserData(request)
+	username = request.data.get('username')
+	if username in userData.following:
+		userData.following.remove(username)
+		userData.save()
+	return Response(userData.following, status=status.HTTP_200_OK)
+
+def initUserData(request):
+	try:
+		userData = UserData.objects.get(user = request.user)
+	except:
+		userData = UserData(user=request.user)
+		userData.save()
+	return(userData)
+	
+@api_view(['GET'])
+def getUserFollowings(request, username):
+
+	try:
+		userData = initUserData(request)
+		following = list(userData.following)
+		return Response(following, status=status.HTTP_200_OK)
+	
+	except:
+		return Response({'message': 'there was an error'}, status=status.HTTP_400_BAD_REQUEST)

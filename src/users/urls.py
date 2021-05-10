@@ -1,8 +1,11 @@
 
 from django.urls import path
-from .views import current_user, UserList
+from .views import *
 
 urlpatterns = [
     path('current_user/', current_user),
-    path('users/', UserList.as_view())
+    path('users/', UserList.as_view()),
+	path('follow/', Follow),
+	path('unfollow/', Unfollow),
+	path('userFollowings/<str:username>/', getUserFollowings),
 ]
