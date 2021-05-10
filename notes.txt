@@ -1,0 +1,9 @@
+when it doesnt get the user right....
+
+add this header
+
+fetch("/users/userFollowings/"+props.username+"/", {
+	headers: {
+		Authorization: `JWT ${localStorage.getItem('token')}`
+	}
+})
