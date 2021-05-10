@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 import datetime
-
+from django.contrib.auth.models import User
 
 @api_view(('GET',))
 def TweetDetails(request, tweet_id):
@@ -35,21 +35,6 @@ def Tweets(request):
 		data["message"] = "server error"
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
 
-def TweetToDict(tweet):
-
-	# processing the day into a string
-	time = str(tweet.time.strftime('%b')) + " " + str(tweet.time.day)
-	if tweet.time.year != datetime.datetime.now().year:
-		time += " "+str(tweet.time.year)
-	
-
-	return({
-		'id': tweet.id,
-		'content': tweet.content,
-		'user': tweet.user.username,
-		'time': time,
-	})
-
 @api_view(("POST",))
 def Compose(request):
 
@@ -77,3 +62,36 @@ def Delete(request):
 			return Response({"message":"You must own this tweet to delete it"}, status=status.HTTP_403_FORBIDDEN)
 	except:
 		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(('GET',))
+def UserTweets(request, username):
+
+	try:
+		user = User.objects.get(username = username)
+		tweets = Tweet.objects.filter(user = user)
+		jsonTweets = []
+		for tweet in tweets:
+			jsonTweets.append(TweetToDict(tweet))
+		jsonTweets.reverse()
+		data = {
+			"bio": "bio yet to be implemented",
+			"tweets": jsonTweets,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+	except:
+		return Response({"message":"This user does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+def TweetToDict(tweet):
+
+	# processing the day into a string
+	time = str(tweet.time.strftime('%b')) + " " + str(tweet.time.day)
+	if tweet.time.year != datetime.datetime.now().year:
+		time += " "+str(tweet.time.year)
+
+	return({
+		'id': tweet.id,
+		'content': tweet.content,
+		'user': tweet.user.username,
+		'time': time,
+	})

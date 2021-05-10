@@ -29,3 +29,8 @@
 	width: 100%;
 	overflow: hidden;
 }
+
+.tweet a{
+	color: white;
+	text-decoration: none;
+}

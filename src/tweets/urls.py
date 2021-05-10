@@ -6,5 +6,6 @@ urlpatterns = [
 	path('tweet/<int:tweet_id>/', TweetDetails),
 	path('tweets/', Tweets),
 	path('compose/', Compose),
-	path('delete/', Delete)
+	path('delete/', Delete),
+	path('userTweets/<str:username>/', UserTweets)
 ]

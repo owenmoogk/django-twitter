@@ -5,6 +5,7 @@ import Register from './users/Register';
 import Tweetpage from './tweet/Tweetpage'
 import Homepage from './homepage/Homepage'
 import Compose from './compose/Compose'
+import Userpage from './users/Userpage'
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -63,6 +64,7 @@ export default function App() {
 						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
 					</Route>
 					<Route path='/tweet/:id' children={<Tweetpage username={username}/>} />
+					<Route path='/user/:username' children={<Userpage/>} />
 					<Route path="/compose">
 						<Compose />
 					</Route>
