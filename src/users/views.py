@@ -6,24 +6,26 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
 from .models import *
+from django import forms
+from django.core.files.storage import FileSystemStorage
 
 # anytime to check if the user is logged in / when react loses its state
 @api_view(['GET'])
 def current_user(request):
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)
+	serializer = UserSerializer(request.user)
+	return Response(serializer.data)
 
 
 class UserList(APIView):
 
-    permission_classes = (permissions.AllowAny,)
+	permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, format=None):
-        serializer = UserSerializerWithToken(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	def post(self, request, format=None):
+		serializer = UserSerializerWithToken(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -62,3 +64,20 @@ def getUserFollowings(request, username):
 	
 	except:
 		return Response({'message': 'there was an error'}, status=status.HTTP_400_BAD_REQUEST)
+
+	
+@api_view(['POST'])
+def addImage(request):
+	if request.FILES['image']:
+		myfile = request.FILES['image']
+		fs = FileSystemStorage()
+		filename = fs.save(myfile.name, myfile)
+		uploaded_file_url = fs.url(filename)
+		print(uploaded_file_url)
+
+	return Response(uploaded_file_url, status=status.HTTP_200_OK)
+
+# class FileForm(forms.ModelForm):
+# 	class Meta:
+# 		model = UserData
+# 		fields = ('profilePicture',)

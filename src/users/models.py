@@ -10,3 +10,4 @@ class UserData(models.Model):
     )
 	following = models.JSONField(default=list)
 	bio = models.CharField(max_length=200)
+	profilePicture = models.ImageField(upload_to = 'images/', null=True)

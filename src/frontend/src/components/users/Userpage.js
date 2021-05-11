@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 import Tweet from '../homepage/Tweet'
+import {getCookie} from '../CSRF'
 
 export default function Userpage(props){
 	
 	const [tweets, setTweets] = useState([])
 	const [bio, setBio] = useState('')
 	const [following, setFollowing] = useState(false)
+	const [image, setImage] = useState()
 	let {username} = useParams();
 
 	function getTweets(username) {
@@ -87,6 +89,18 @@ export default function Userpage(props){
 			})
 	}
 
+	const newImage = () => {
+		let uploadData = new FormData()
+		uploadData.append('image', image, image.name)
+		fetch('/users/addUserImage/', {
+			method: "POST",
+			headers: {
+				'Authorization': `JWT ${localStorage.getItem('token')}`,
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: uploadData
+		}).then(response => console.log(response))
+	}
 
 	return(
 		<div className='user'>
@@ -102,6 +116,14 @@ export default function Userpage(props){
 			<div id="homeTweets">
 				{tweets}
 			</div>
+			{username == props.username
+				? 
+					<div>
+						<input type='file' onChange={(evt) => setImage(evt.target.files[0])} />
+						<button onClick={() => newImage()}>add image</button>
+					</div>
+				: null
+			}
 		</div>
 	)
 }
