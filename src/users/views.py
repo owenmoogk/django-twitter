@@ -77,7 +77,15 @@ def addImage(request):
 
 	return Response(uploaded_file_url, status=status.HTTP_200_OK)
 
-# class FileForm(forms.ModelForm):
-# 	class Meta:
-# 		model = UserData
-# 		fields = ('profilePicture',)
+
+@api_view(['GET'])
+def searchUsers(request, searchQuery):
+	users = User.objects.all()
+
+	usernames = []
+
+	for user in users:
+		if searchQuery in user.username:
+			usernames.append(user.username)
+
+	return Response(usernames, status=status.HTTP_200_OK)

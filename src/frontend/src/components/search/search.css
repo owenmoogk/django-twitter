@@ -1,0 +1,11 @@
+#searchResults a{
+	color: white;
+	text-decoration: none;
+	padding: 10px;
+}
+
+#searchResults{
+	padding-top: 10px;
+	display: flex;
+	flex-direction: column;
+}
