@@ -6,6 +6,7 @@ import Tweetpage from './tweet/Tweetpage'
 import Homepage from './homepage/Homepage'
 import Compose from './compose/Compose'
 import Userpage from './users/Userpage'
+import Search from './search/Search'
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -45,36 +46,61 @@ export default function App() {
 		setUsername('')
 	};
 
+	function loggedInPage(){
+		return(
+			<Switch>
+				<Route path='/login'>
+					<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+				</Route>
+				<Route path='/signup'>
+					<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+				</Route>
+				<Route path='/search'>
+					<Search />
+				</Route>
+				<Route path='/tweet/:id' children={<Tweetpage username={username}/>} />
+				<Route path='/user/:username' children={<Userpage username={username}/>} />
+				<Route path="/compose">
+					<Compose />
+				</Route>
+				<Route exact path='/'>
+					<Homepage/>
+				</Route>
+			</Switch>
+		)
+	}
+
+	function loggedOutPage(){
+		return(
+			<Switch>
+				<Route path='/login'>
+					<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+				</Route>
+				<Route path='/signup'>
+					<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
+				</Route>
+			</Switch>
+		)
+	}
+
 	return (
 		<Router>
-		<div className="App">
-			<div id="leftBar">
-				<Nav
-					loggedIn={loggedIn}
-					handleLogout={handleLogout}
-					username={username}
-				/>
+			<div className="App">
+				<div id="leftBar">
+					<Nav
+						loggedIn={loggedIn}
+						handleLogout={handleLogout}
+						username={username}
+					/>
+				</div>
+				<div id='mainPage'>
+					{loggedIn
+						? loggedInPage()
+						: loggedOutPage()
+					}
+				</div>
+				<div id="rightBar"></div>
 			</div>
-			<div id='mainPage'>
-				<Switch>
-					<Route path='/login'>
-						<LoginForm setUsername={setUsername} setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-					</Route>
-					<Route path='/signup'>
-						<Register setLoggedIn={setLoggedIn} loggedIn={loggedIn} username={username}/>
-					</Route>
-					<Route path='/tweet/:id' children={<Tweetpage username={username}/>} />
-					<Route path='/user/:username' children={<Userpage username={username}/>} />
-					<Route path="/compose">
-						<Compose />
-					</Route>
-					<Route exact path='/'>
-						<Homepage/>
-					</Route>
-				</Switch>
-			</div>
-			<div id="rightBar"></div>
-		</div>
 		</Router>
 	);
 }
