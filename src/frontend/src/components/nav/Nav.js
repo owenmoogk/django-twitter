@@ -13,9 +13,9 @@ export default function Nav(props) {
 	const loggedInNav = (
 		<div id='nav'>
 			<Link to='/'>Home</Link>
+			<Link to='/compose'>Compose</Link>
 			<Link to='/search'>Search</Link>
 			<a onClick={props.handleLogout}>Logout</a>
-			<Link to='/compose'>Compose</Link>
 			<Link to={"/user/"+props.username}>{props.username}</Link>
 		</div>
 	);
