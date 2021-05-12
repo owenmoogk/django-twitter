@@ -4,6 +4,7 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 import datetime
 from django.contrib.auth.models import User
+from users.models import *
 
 @api_view(('GET',))
 def TweetDetails(request, tweet_id):
@@ -25,11 +26,14 @@ def Tweets(request):
 	
 	data = []
 
+	userFollowing = UserData.objects.get(user = request.user).following
+
 	try:
 		tweets = list(Tweet.objects.all())
 		tweets.reverse()
 		for tweet in tweets:
-			data.append(TweetToDict(tweet))
+			if tweet.user.username in userFollowing:
+				data.append(TweetToDict(tweet))
 		return Response(data, status=status.HTTP_200_OK)
 	except:
 		data["message"] = "server error"

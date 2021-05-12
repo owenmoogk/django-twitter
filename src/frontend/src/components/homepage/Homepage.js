@@ -8,7 +8,11 @@ export default function Homepage(props){
 
 	function getTweets() {
 
-		fetch("/tweets/tweets/")
+		fetch("/tweets/tweets/", {
+			headers: {
+				Authorization: `JWT ${localStorage.getItem('token')}`
+			}
+		})
 			.then(res => res.json())
 			.then(json => {
 				// https://flaviocopes.com/react-how-to-loop/
