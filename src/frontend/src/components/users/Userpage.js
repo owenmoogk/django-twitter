@@ -119,9 +119,11 @@ export default function Userpage(props){
 
 	return(
 		<div className='user'>
-			{!following
-			? <button onClick={()=>followUser()}>follow</button>
-			: <button onClick={()=>unfollowUser()}>unfollow</button>
+			{username != props.username
+				? !following
+					? <button onClick={()=>followUser()}>follow</button>
+					: <button onClick={()=>unfollowUser()}>unfollow</button>
+				: null
 			}
 			
 			<div className='userData'>

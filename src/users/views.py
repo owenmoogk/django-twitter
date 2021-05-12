@@ -35,7 +35,7 @@ class UserList(APIView):
 def Follow(request):
 	userData = initUserData(request)
 	username = request.data.get('username')
-	if username not in userData.following:
+	if username not in userData.following and username != request.user.username:
 		userData.following.append(username)
 		userData.save()
 	return Response(userData.following, status=status.HTTP_200_OK)
