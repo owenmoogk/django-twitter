@@ -17,20 +17,29 @@
 
 #homeTweets .tweet{
 	border-bottom: 1px solid grey;
-	padding: 0 5px 0 5px;
-	overflow-wrap:initial;
-}
-.tweetLink{
-	text-decoration: none;
-	color: white;
+	overflow-wrap: initial;
+	display: flex;
+	width: 100%;
 }
 
-#tweetContent{
-	width: 100%;
+#homeTweets a{
+	color: white;
+	text-decoration: none;
+}
+
+.tweetImage{
+	padding: 10px;
+	height: 100%;
+}
+
+.imageWrapper{
+	height: 60px;
+	width: 60px;
+	border-radius: 30px;
 	overflow: hidden;
 }
 
-.tweet a{
-	color: white;
-	text-decoration: none;
+.imageWrapper img{
+	height: 100%;
+	width: 100%;
 }
