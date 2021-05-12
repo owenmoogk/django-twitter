@@ -139,8 +139,7 @@ export default function Userpage(props){
 					</div>
 				: null
 			}
-
-			<img src='/media/owenm.jpg' alt='boioi' width='100' height='100'/>
+			<img src={'/media/'+username+'.jpg'} onError={(e) => (e.target.style.display = 'none')} width='100' height='100'/>
 			<h2>{message}</h2>
 		</div>
 	)
