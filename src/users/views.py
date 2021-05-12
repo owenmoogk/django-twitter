@@ -8,6 +8,9 @@ from .serializers import UserSerializer, UserSerializerWithToken
 from .models import *
 from django import forms
 from django.core.files.storage import FileSystemStorage
+import os
+from django.conf import settings
+from PIL import Image
 
 # anytime to check if the user is logged in / when react loses its state
 @api_view(['GET'])
@@ -65,13 +68,30 @@ def getUserFollowings(request, username):
 	except:
 		return Response({'message': 'there was an error'}, status=status.HTTP_400_BAD_REQUEST)
 
+# https://www.itachay.com/2020/04/override-replace-uploaded-file-in-django.html
+class OverwriteStorage(FileSystemStorage):
+	def get_available_name(self, name, max_length=None):
+		# If the filename already exists, remove it as if it was a true file system
+		if self.exists(name):
+			os.remove(os.path.join(settings.MEDIA_ROOT, name))
+		return name
 	
 @api_view(['POST'])
 def addImage(request):
 	if request.FILES['image']:
+		username = request.user.username
 		myfile = request.FILES['image']
-		fs = FileSystemStorage()
-		filename = fs.save(myfile.name, myfile)
+
+		# checking its a valid image
+		try:
+			Image.open(myfile)
+		except:
+			print('invalid image')
+			return Response({'message': 'oops'}, status=status.HTTP_404_NOT_FOUND)
+
+
+		fs = OverwriteStorage()
+		filename = fs.save(username+'.jpg', myfile)
 		uploaded_file_url = fs.url(filename)
 		print(uploaded_file_url)
 

@@ -6,6 +6,7 @@ import {getCookie} from '../CSRF'
 export default function Userpage(props){
 	
 	const [tweets, setTweets] = useState([])
+	const [message, setMessage] = useState('')
 	const [bio, setBio] = useState('')
 	const [following, setFollowing] = useState(false)
 	const [image, setImage] = useState()
@@ -91,6 +92,9 @@ export default function Userpage(props){
 
 	const newImage = () => {
 		let uploadData = new FormData()
+		if (!image){
+			return
+		}
 		uploadData.append('image', image, image.name)
 		fetch('/users/addUserImage/', {
 			method: "POST",
@@ -99,7 +103,18 @@ export default function Userpage(props){
 				'X-CSRFToken': getCookie('csrftoken')
 			},
 			body: uploadData
-		}).then(response => console.log(response))
+		})
+		.then(response => {
+			if (response.ok){
+				window.location.reload(true)
+			}
+			else{
+				return(response.json())
+			}
+		})
+		.then(json => {
+			setMessage(json.message)
+		})
 	}
 
 	return(
@@ -124,6 +139,9 @@ export default function Userpage(props){
 					</div>
 				: null
 			}
+
+			<img src='/media/owenm.jpg' alt='boioi' width='100' height='100'/>
+			<h2>{message}</h2>
 		</div>
 	)
 }

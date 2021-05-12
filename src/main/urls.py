@@ -4,9 +4,10 @@ from frontend.views import *
 from rest_framework_jwt.views import obtain_jwt_token
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 urlpatterns = [
-
+	path('media/<path>', serve,{'document_root': settings.MEDIA_ROOT}),
 	path('token-auth/', obtain_jwt_token),
 	path('users/', include('users.urls')),
     path('admin/', admin.site.urls),

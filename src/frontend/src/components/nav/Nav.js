@@ -16,7 +16,7 @@ export default function Nav(props) {
 			<Link to='/search'>Search</Link>
 			<a onClick={props.handleLogout}>Logout</a>
 			<Link to='/compose'>Compose</Link>
-			<Link to="/profile">{props.username}</Link>
+			<Link to={"/user/"+props.username}>{props.username}</Link>
 		</div>
 	);
 
