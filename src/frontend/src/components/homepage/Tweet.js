@@ -6,9 +6,11 @@ export default function Tweet(props){
 		<a href={"/tweet/"+props.data.id} className="tweetLink">
 			<div className='tweet'>
 				<div className='tweetImage'>
-					<div className='imageWrapper'>
-						<img src={'/media/'+props.data.user+".jpg"} onError={(e) => {e.target.style.display = 'none'}}/>
-					</div>
+					<a href={'/user/' + props.data.user}>
+						<div className='imageWrapper'>
+							<img src={'/media/'+props.data.user+".jpg"} onError={(e) => {e.target.style.display = 'none'}}/>
+						</div>
+					</a>
 				</div>
 				<div className='tweetText'>
 					<p><a href={'/user/' + props.data.user}><span className='username'>@{props.data.user}</span></a> • <span className='time'>{props.data.time}</span></p>

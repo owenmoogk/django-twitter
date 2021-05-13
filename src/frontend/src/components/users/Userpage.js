@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 import Tweet from '../homepage/Tweet'
 import {getCookie} from '../CSRF'
+import './userpage.css'
 
 export default function Userpage(props){
 	
@@ -118,16 +119,18 @@ export default function Userpage(props){
 	}
 
 	return(
-		<div className='user'>
-			{username != props.username
+		<div className='user'>			
+			<div className='userData'>
+				
+				<h1>@{username}</h1>
+
+				{username != props.username
 				? !following
 					? <button onClick={()=>followUser()}>follow</button>
 					: <button onClick={()=>unfollowUser()}>unfollow</button>
 				: null
-			}
-			
-			<div className='userData'>
-				<h1>{username}</h1>
+				}
+
 				<h3>{bio}</h3>
 			</div>
 			<div id="homeTweets">
@@ -141,7 +144,6 @@ export default function Userpage(props){
 					</div>
 				: null
 			}
-			<img src={'/media/'+username+'.jpg'} onError={(e) => (e.target.style.display = 'none')} width='100' height='100'/>
 			<h2>{message}</h2>
 		</div>
 	)
