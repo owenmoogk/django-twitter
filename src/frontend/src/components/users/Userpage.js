@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 import Tweet from '../homepage/Tweet'
 import {getCookie} from '../CSRF'
-import './userpage.css'
 
 export default function Userpage(props){
 	
