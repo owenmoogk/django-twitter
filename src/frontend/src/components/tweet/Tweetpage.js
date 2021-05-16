@@ -10,7 +10,11 @@ export default function Tweetpage(props){
 	let {id} = useParams();
 
 	function getTweet(tweetId) {
-		fetch("/tweets/tweet/"+tweetId+"/")
+		fetch("/tweets/tweet/"+tweetId+"/", {
+			headers: {
+				Authorization: `JWT ${localStorage.getItem('token')}`
+			}
+		})
 			.then(res => res.json())
 			.then(json => {
 				setContent(json)

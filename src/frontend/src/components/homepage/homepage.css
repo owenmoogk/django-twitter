@@ -15,7 +15,7 @@
 	color: grey;
 }
 
- .tweet{
+.tweet{
 	border-bottom: 1px solid grey;
 	overflow-wrap: initial;
 	display: flex;

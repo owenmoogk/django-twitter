@@ -13,7 +13,11 @@ export default function Userpage(props){
 	let {username} = useParams();
 
 	function getTweets(username) {
-		fetch("/tweets/userTweets/"+username+"/")
+		fetch("/tweets/userTweets/"+username+"/", {
+			headers: {
+				Authorization: `JWT ${localStorage.getItem('token')}`
+			}
+		})
 			.then(res => res.json())
 			.then(json => {
 				if (json.message){
