@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import Tweet from './Tweet'
+import Tweet from '../tweet/Tweet'
 import './homepage.css'
 
 export default function Homepage(props){
@@ -18,7 +18,7 @@ export default function Homepage(props){
 				// https://flaviocopes.com/react-how-to-loop/
 				var returnData = []
 				for (const [index, value] of json.entries()){
-					returnData.push(<Tweet key={index} data={value} username={props.username}/>)
+					returnData.push(value)
 				}
 				setTweets(returnData)
 			});
@@ -31,7 +31,9 @@ export default function Homepage(props){
 
 	return(
 		<div id="homeTweets">
-			{tweets}
+			{(tweets || []).map(data => (
+            	<Tweet key={data.id} data={data} username={props.username}/>
+          	))}
 		</div>
 	)
 }

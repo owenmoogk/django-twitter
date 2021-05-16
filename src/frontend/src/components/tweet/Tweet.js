@@ -39,8 +39,6 @@ export default function Tweet(props){
 			})
 	}
 
-	console.log(props.username)
-
 	return(
 		<a href={"/tweet/"+props.data.id} className="tweetLink">
 			<div className='tweet'>
@@ -67,7 +65,7 @@ export default function Tweet(props){
 								? <a href='#'><span onClick={() => dislikeTweet()}>❤️</span></a>
 								: <a href='#'><span onClick={() => likeTweet()}>♡</span></a>
 						}
-				</div>
+					</div>
 				</div>
 			</div>
 		</a>

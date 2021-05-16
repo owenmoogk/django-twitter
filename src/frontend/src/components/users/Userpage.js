@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
-import Tweet from '../homepage/Tweet'
+import Tweet from '../tweet/Tweet'
 import {getCookie} from '../CSRF'
 
 export default function Userpage(props){
@@ -28,7 +28,6 @@ export default function Userpage(props){
 						returnData.push((index, value))
 					}
 					setTweets(returnData)
-					console.log(returnData)
 				}
 			});
 	}
@@ -134,6 +133,7 @@ export default function Userpage(props){
 				<h3>{bio}</h3>
 			</div>
 			<div id="homeTweets">
+				{/* https://www.robinwieruch.de/react-state-array-add-update-remove */}
 				{(tweets || []).map(data => (
 					<Tweet key={data.id} data={data} username={props.username}/>
 				))}
