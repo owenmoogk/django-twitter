@@ -39,8 +39,35 @@ export default function Tweet(props){
 			})
 	}
 
-	return(
-		<a href={"/tweet/"+props.data.id} className="tweetLink">
+	function deleteTweet() {
+		fetch('/tweets/delete/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `JWT ${localStorage.getItem('token')}`,
+			},
+			body: JSON.stringify({tweetId: props.data.id})
+		})
+			.then(response => {
+				if (response.ok){
+					if (props.tweetPage){
+						// send home if on the tweet page
+						window.location.replace('/')
+					}
+					else{
+						// reload to get the updates
+						window.location.reload()
+					}
+				}
+				return(response.json())
+			})
+			.then(json => {
+				console.log(json)
+			})
+	};
+
+	function tweetBody(){
+		return(
 			<div className='tweet'>
 				<div className='tweetImage'>
 					<a href={'/user/' + props.data.user}>
@@ -54,10 +81,10 @@ export default function Tweet(props){
 					<p id='tweetContent'>{props.data.content}</p>
 					<div className='icons'>
 						{props.username == props.data.user
-							? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
+							? <a href='#'><span className="delete" onClick={() => deleteTweet()}>Delete</span></a>
 							: null
 						}
-						{ likeOverride == null
+						{likeOverride == null
 							? props.data.liked
 								? <a href='#'><span onClick={() => dislikeTweet()}>❤️</span></a>
 								: <a href='#'><span onClick={() => likeTweet()}>♡</span></a>
@@ -68,6 +95,15 @@ export default function Tweet(props){
 					</div>
 				</div>
 			</div>
-		</a>
+		)
+	}
+
+	return(
+		<div>
+			{props.tweetPage
+				? tweetBody()
+				: <a href={"/tweet/"+props.data.id} className="tweetLink">{tweetBody()}</a>
+			}
+		</div>
 	)
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 import './tweet.css'
+import Tweet from './Tweet'
 
 export default function Tweetpage(props){
 	
@@ -19,55 +20,14 @@ export default function Tweetpage(props){
 			});
 	}
 
-	function deleteTweet() {
-
-		var bodyData = {
-			tweetId: id
-		}
-
-		fetch('/tweets/delete/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `JWT ${localStorage.getItem('token')}`,
-			},
-			body: JSON.stringify(bodyData)
-		})
-			.then(response => {
-				if (response.ok){
-					window.location.replace('/')
-				}
-				return(response.json())
-			})
-			.then(json => {
-				setMessage(json.message)
-			})
-	};
-
 	useEffect(() => {
 		getTweet(id)
 	}, [])
 
 
 	return(
-		<div className='tweet'>
-			<div className='tweetImage'>
-				<a href={'/user/' + data.user}>
-					<div className='imageWrapper'>
-						
-					</div>
-				</a>
-			</div>
-			<div className='tweetText'>
-				<p><a href={'/user/'+data.user}><span className='username'>@{data.user}</span></a> • <span className='time'>{data.time}</span></p>
-				<p id='tweetContent'>{data.content}</p>
-				<div className='icons'>
-					{props.username == data.user
-						? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
-						: null
-					}
-				</div>
-			</div>
+		<div>
+			<Tweet data={data} username={props.username} tweetPage={true}/>
 			<h2>{message}</h2>
 		</div>
 	)
