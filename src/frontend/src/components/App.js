@@ -64,7 +64,7 @@ export default function App() {
 					<Compose />
 				</Route>
 				<Route exact path='/'>
-					<Homepage/>
+					<Homepage username={username}/>
 				</Route>
 			</Switch>
 		)

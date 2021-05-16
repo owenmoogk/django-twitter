@@ -25,9 +25,10 @@ export default function Userpage(props){
 					// setting tweets
 					var returnData = []
 					for (const [index, value] of json.tweets.entries()){
-						returnData.push(<Tweet key={index} data={value} />)
+						returnData.push((index, value))
 					}
 					setTweets(returnData)
+					console.log(returnData)
 				}
 			});
 	}
@@ -133,7 +134,10 @@ export default function Userpage(props){
 				<h3>{bio}</h3>
 			</div>
 			<div id="homeTweets">
-				{tweets}
+				{(tweets || []).map(data => (
+					<Tweet key={data.id} data={data} username={props.username}/>
+				))}
+				{/* {tweets} */}
 			</div>
 			{username == props.username
 				? 

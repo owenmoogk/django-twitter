@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import {getCookie} from "../CSRF"
+import { getCookie } from "../CSRF"
 
 export default function Tweet(props){
 
@@ -38,6 +38,8 @@ export default function Tweet(props){
 				}
 			})
 	}
+
+	console.log(props.username)
 
 	return(
 		<a href={"/tweet/"+props.data.id} className="tweetLink">

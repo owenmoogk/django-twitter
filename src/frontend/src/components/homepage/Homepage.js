@@ -18,7 +18,7 @@ export default function Homepage(props){
 				// https://flaviocopes.com/react-how-to-loop/
 				var returnData = []
 				for (const [index, value] of json.entries()){
-					returnData.push(<Tweet key={index} data={value} />)
+					returnData.push(<Tweet key={index} data={value} username={props.username}/>)
 				}
 				setTweets(returnData)
 			});
