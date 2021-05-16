@@ -11,7 +11,7 @@ def TweetDetails(request, tweet_id):
 
 	try:
 		tweet = Tweet.objects.get(id = tweet_id)
-		data = TweetToDict(tweet)
+		data = TweetToDict(tweet, request)
 		return Response(data, status=status.HTTP_200_OK)
 	except:
 		data={
@@ -33,10 +33,13 @@ def Tweets(request):
 		tweets.reverse()
 		for tweet in tweets:
 			if tweet.user.username in userFollowing:
-				data.append(TweetToDict(tweet))
+				data.append(TweetToDict(tweet, request))
 		return Response(data, status=status.HTTP_200_OK)
-	except:
-		data["message"] = "server error"
+	except Exception as e:
+		print(e)
+		data = {
+			"message": "server error"
+		}
 		return Response(data, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(("POST",))
@@ -68,6 +71,36 @@ def Delete(request):
 		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(('POST',))
+def LikeTweet(request):
+	username = request.user.username
+	tweetId = request.data.get('tweetId')
+
+	try:
+		tweet = Tweet.objects.get(id = tweetId)
+		if not username in tweet.likes:
+			tweet.likes.append(username)
+			tweet.save()
+		return Response({"message":"all good"}, status=status.HTTP_200_OK)
+	except:
+		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(('POST',))
+def DislikeTweet(request):
+	username = request.user.username
+	tweetId = request.data.get('tweetId')
+
+	try:
+		tweet = Tweet.objects.get(id = tweetId)
+		if username in tweet.likes:
+			tweet.likes.remove(username)
+			tweet.save()
+		return Response({"message":"all good"}, status=status.HTTP_200_OK)
+	except:
+		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(('GET',))
 def UserTweets(request, username):
 
@@ -76,7 +109,7 @@ def UserTweets(request, username):
 		tweets = Tweet.objects.filter(user = user)
 		jsonTweets = []
 		for tweet in tweets:
-			jsonTweets.append(TweetToDict(tweet))
+			jsonTweets.append(TweetToDict(tweet, request))
 		jsonTweets.reverse()
 		data = {
 			"bio": "bio yet to be implemented",
@@ -86,16 +119,21 @@ def UserTweets(request, username):
 	except:
 		return Response({"message":"This user does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
-def TweetToDict(tweet):
+def TweetToDict(tweet, request):
+
+	username = request.user.username
 
 	# processing the day into a string
 	time = str(tweet.time.strftime('%b')) + " " + str(tweet.time.day)
 	if tweet.time.year != datetime.datetime.now().year:
 		time += " "+str(tweet.time.year)
 
+	liked = (username in tweet.likes)
+
 	return({
 		'id': tweet.id,
 		'content': tweet.content,
 		'user': tweet.user.username,
 		'time': time,
+		'liked': liked,
 	})

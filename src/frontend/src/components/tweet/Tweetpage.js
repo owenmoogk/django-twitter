@@ -15,7 +15,7 @@ export default function Tweetpage(props){
 				setContent(json)
 				var el = document.getElementsByClassName('imageWrapper')[0]
 				var imgSrc = '/media/'+json.user+'.jpg'
-				el.innerHTML = "<img src='"+imgSrc+"' onError={(e) => {e.target.style.display = 'none'}}/>"
+				el.innerHTML = "<img src='"+imgSrc+"' onError=\"this.style.display = \'none\'\"/>"
 			});
 	}
 
@@ -59,14 +59,14 @@ export default function Tweetpage(props){
 				</a>
 			</div>
 			<div className='tweetText'>
-				<p><span className='username'>@{data.user}</span> • <span className='time'>{data.time}</span></p>
+				<p><a href={'/user/'+data.user}><span className='username'>@{data.user}</span></a> • <span className='time'>{data.time}</span></p>
 				<p id='tweetContent'>{data.content}</p>
 				<div className='icons'>
 					{props.username == data.user
 						? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
 						: null
 					}
-			</div>
+				</div>
 			</div>
 			<h2>{message}</h2>
 		</div>

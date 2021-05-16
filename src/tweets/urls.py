@@ -7,5 +7,7 @@ urlpatterns = [
 	path('tweets/', Tweets),
 	path('compose/', Compose),
 	path('delete/', Delete),
-	path('userTweets/<str:username>/', UserTweets)
+	path('userTweets/<str:username>/', UserTweets),
+	path('like/', LikeTweet),
+	path('dislike/', DislikeTweet)
 ]
