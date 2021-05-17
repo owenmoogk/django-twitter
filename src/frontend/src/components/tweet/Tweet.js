@@ -4,7 +4,6 @@ import { getCookie } from "../CSRF"
 export default function Tweet(props){
 
 	const [likeOverride, setLikeOverride] = useState(null)
-	const [retweetOverride, setRetweetOverride] = useState(null)
 
 	function likeTweet(){
 		fetch('/tweets/like/', {
@@ -121,13 +120,9 @@ export default function Tweet(props){
 				<a href='#' onClick={(e)=> e.preventDefault()}>
 					{props.username == props.data.user
 						? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
-						: retweetOverride == null
-							? props.data.userHasRetweeted
-								? <span onClick={() => undoRetweet()}>⏪</span>
-								: <span onClick={() => retweet()}>🔁</span>
-							: retweetOverride
-								? <span onClick={() => undoRetweet()}>⏪</span>
-								: <span onClick={() => retweet()}>🔁</span>
+						: props.data.userHasRetweeted
+							? <span onClick={() => undoRetweet()}>⏪</span>
+							: <a href={"/compose/" + props.data.id}><span onClick={() => retweet()}>🔁</span></a>
 					}
 				</a>
 

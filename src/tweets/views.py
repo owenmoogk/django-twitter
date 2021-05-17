@@ -103,6 +103,7 @@ def DislikeTweet(request):
 def Retweet(request):
 	username = request.user.username
 	tweetId = request.data.get('tweetId')
+	content = request.data.get('content')
 	
 	# check to see that the user hasnt already retweeted this
 	userTweets = list(Tweet.objects.filter(user = request.user, isRetweet = True))
@@ -111,9 +112,9 @@ def Retweet(request):
 			return Response({"message":"already retweeted this"}, status=status.HTTP_403_FORBIDDEN)
 
 	try:
-		tweet = Tweet(user = request.user, isRetweet = True, retweetKey = Tweet.objects.get(id = tweetId))
+		tweet = Tweet(user = request.user, content=content, isRetweet = True, retweetKey = Tweet.objects.get(id = tweetId))
 		tweet.save()
-		return Response({"message":"all good"}, status=status.HTTP_200_OK)
+		return Response({}, status=status.HTTP_200_OK)
 	except Exception as e:
 		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -123,10 +124,10 @@ def UndoRetweet(request):
 	tweetId = request.data.get('tweetId')
 
 	try:
-		tweet = Tweet.objects.get(id = tweetId)
-		if username in tweet.retweets:
-			tweet.retweets.remove(username)
-			tweet.save()
+		userTweets = list(Tweet.objects.filter(user = request.user, isRetweet = True))
+		for tweet in userTweets:
+			if tweet.retweetKey.id == tweetId:
+				tweet.delete()
 		return Response({"message":"all good"}, status=status.HTTP_200_OK)
 	except:
 		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)

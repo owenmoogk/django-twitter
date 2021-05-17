@@ -15,5 +15,6 @@
 }
 
 #compose input[type="submit"]{
-	width: 150px;
+	width: fit-content;
+	padding: 0 20px;
 }

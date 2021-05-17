@@ -59,8 +59,9 @@ export default function App() {
 					<Search />
 				</Route>
 				<Route path='/tweet/:id' children={<Tweetpage username={username}/>} />
-				<Route path='/user/:username' children={<Userpage username={username}/>} />
-				<Route path="/compose">
+				<Route path='/user/:username' children={<Userpage username={username} />} />
+				<Route path='/compose/:tweetId' children={<Compose username={username}/>} />
+				<Route path="/compose/">
 					<Compose />
 				</Route>
 				<Route exact path='/'>
