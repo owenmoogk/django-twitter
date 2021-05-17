@@ -4,6 +4,7 @@ import { getCookie } from "../CSRF"
 export default function Tweet(props){
 
 	const [likeOverride, setLikeOverride] = useState(null)
+	const [retweetOverride, setRetweetOverride] = useState(null)
 
 	function likeTweet(){
 		fetch('/tweets/like/', {
@@ -39,6 +40,41 @@ export default function Tweet(props){
 			})
 	}
 
+	function retweet(){
+		fetch('/tweets/retweet/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `JWT ${localStorage.getItem('token')}`,
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify({tweetId: props.data.id})
+		})
+			.then(response => {
+				if (response.ok){
+					setRetweetOverride(true)
+				}
+			})
+	}
+
+	function undoRetweet(){
+		fetch('/tweets/undoRetweet/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `JWT ${localStorage.getItem('token')}`,
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify({tweetId: props.data.id})
+		})
+			.then(response => {
+				if (response.ok){
+					setRetweetOverride(false)
+				}
+			})
+	}
+
+
 	function deleteTweet() {
 		fetch('/tweets/delete/', {
 			method: 'POST',
@@ -66,6 +102,39 @@ export default function Tweet(props){
 			})
 	};
 
+	function renderIcons(){
+		return(
+			<div className='icons'>
+
+				{/* delete or rt */}
+				<a href='#'>
+					{props.username == props.data.user
+						? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
+						: retweetOverride == null
+							? props.data.userHasRetweeted
+								? <span onClick={() => undoRetweet()}>⏪</span>
+								: <span onClick={() => retweet()}>🔁</span>
+							: retweetOverride
+								? <span onClick={() => undoRetweet()}>⏪</span>
+								: <span onClick={() => retweet()}>🔁</span>
+					}
+				</a>
+
+				{/* likes */}
+				<a href='#'>
+					{likeOverride == null
+						? props.data.liked
+							?  <span onClick={() => dislikeTweet()}> ❤️ </span>
+							: <span onClick={() => likeTweet()}> ♡ </span>
+						: likeOverride
+							? <span onClick={() => dislikeTweet()}> ❤️ </span>
+							: <span onClick={() => likeTweet()}> ♡ </span>
+					}
+				</a>
+			</div>
+		)
+	}
+
 	function tweetBody(){
 		return(
 			<div className='tweet'>
@@ -79,20 +148,14 @@ export default function Tweet(props){
 				<div className='tweetText'>
 					<p><a href={'/user/' + props.data.user}><span className='username'>@{props.data.user}</span></a> • <span className='time'>{props.data.time}</span></p>
 					<p id='tweetContent'>{props.data.content}</p>
-					<div className='icons'>
-						{props.username == props.data.user
-							? <a href='#'><span className="delete" onClick={() => deleteTweet()}>Delete</span></a>
-							: null
-						}
-						{likeOverride == null
-							? props.data.liked
-								? <a href='#'><span onClick={() => dislikeTweet()}>❤️</span></a>
-								: <a href='#'><span onClick={() => likeTweet()}>♡</span></a>
-							: likeOverride
-								? <a href='#'><span onClick={() => dislikeTweet()}>❤️</span></a>
-								: <a href='#'><span onClick={() => likeTweet()}>♡</span></a>
-						}
-					</div>
+					{props.data.isRetweet
+						? <Tweet username={props.username} data={props.data.retweetContent} omitIcons={true}/>
+						: null
+					}
+					{props.omitIcons
+						? null
+						: renderIcons()
+					}
 				</div>
 			</div>
 		)

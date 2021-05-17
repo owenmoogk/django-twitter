@@ -36,7 +36,6 @@ def Tweets(request):
 				data.append(TweetToDict(tweet, request))
 		return Response(data, status=status.HTTP_200_OK)
 	except Exception as e:
-		print(e)
 		data = {
 			"message": "server error"
 		}
@@ -100,6 +99,37 @@ def DislikeTweet(request):
 	except:
 		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(('POST',))
+def Retweet(request):
+	username = request.user.username
+	tweetId = request.data.get('tweetId')
+	
+	# check to see that the user hasnt already retweeted this
+	userTweets = list(Tweet.objects.filter(user = request.user, isRetweet = True))
+	for tweet in userTweets:
+		if tweet.retweetKey.id == tweetId:
+			return Response({"message":"already retweeted this"}, status=status.HTTP_403_FORBIDDEN)
+
+	try:
+		tweet = Tweet(user = request.user, isRetweet = True, retweetKey = Tweet.objects.get(id = tweetId))
+		tweet.save()
+		return Response({"message":"all good"}, status=status.HTTP_200_OK)
+	except Exception as e:
+		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(('POST',))
+def UndoRetweet(request):
+	username = request.user.username
+	tweetId = request.data.get('tweetId')
+
+	try:
+		tweet = Tweet.objects.get(id = tweetId)
+		if username in tweet.retweets:
+			tweet.retweets.remove(username)
+			tweet.save()
+		return Response({"message":"all good"}, status=status.HTTP_200_OK)
+	except:
+		return Response({"message":"This tweet does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(('GET',))
 def UserTweets(request, username):
@@ -121,14 +151,24 @@ def UserTweets(request, username):
 
 def TweetToDict(tweet, request):
 
-	username = request.user.username
-
-	# processing the day into a string
+	# processing time
 	time = str(tweet.time.strftime('%b')) + " " + str(tweet.time.day)
 	if tweet.time.year != datetime.datetime.now().year:
 		time += " "+str(tweet.time.year)
 
+	# processing liked
+	username = request.user.username
 	liked = (username in tweet.likes)
+
+	# if retweet add retweeet content
+	if tweet.isRetweet:
+		retweetContent = TweetToDict(tweet.retweetKey, request)
+	else:
+		retweetContent = None
+
+	# has the user retweeted this tweet
+	userRts = getTweetsThatUserHasRetweeted(request)
+	userHasRetweeted = True if tweet.id in userRts else False
 
 	return({
 		'id': tweet.id,
@@ -136,4 +176,16 @@ def TweetToDict(tweet, request):
 		'user': tweet.user.username,
 		'time': time,
 		'liked': liked,
+		'isRetweet': tweet.isRetweet,
+		'retweetContent': retweetContent,
+		'userHasRetweeted': userHasRetweeted
 	})
+
+def getTweetsThatUserHasRetweeted(request):
+	userRetweets = Tweet.objects.filter(user = request.user, isRetweet = True)
+
+	rtIdList = []
+	for tweet in userRetweets:
+		rtIdList.append(tweet.retweetKey.id)
+	
+	return(rtIdList)

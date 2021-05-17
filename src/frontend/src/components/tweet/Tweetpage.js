@@ -5,7 +5,6 @@ import Tweet from './Tweet'
 
 export default function Tweetpage(props){
 	
-	const [message, setMessage] = useState('')
 	const [data, setContent] = useState('')
 	let {id} = useParams();
 
@@ -32,7 +31,6 @@ export default function Tweetpage(props){
 	return(
 		<div>
 			<Tweet data={data} username={props.username} tweetPage={true}/>
-			<h2>{message}</h2>
 		</div>
 	)
 }
