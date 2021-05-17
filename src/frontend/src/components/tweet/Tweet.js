@@ -74,7 +74,6 @@ export default function Tweet(props){
 			})
 	}
 
-
 	function deleteTweet() {
 		fetch('/tweets/delete/', {
 			method: 'POST',
@@ -106,8 +105,20 @@ export default function Tweet(props){
 		return(
 			<div className='icons'>
 
+				{/* likes */}
+				<a href='#' onClick={(e)=> e.preventDefault()}>
+					{likeOverride == null
+						? props.data.liked
+							?  <span onClick={() => dislikeTweet()}> ❤️ </span>
+							: <span onClick={() => likeTweet()}> ♡ </span>
+						: likeOverride
+							? <span onClick={() => dislikeTweet()}> ❤️ </span>
+							: <span onClick={() => likeTweet()}> ♡ </span>
+					}
+				</a>
+
 				{/* delete or rt */}
-				<a href='#'>
+				<a href='#' onClick={(e)=> e.preventDefault()}>
 					{props.username == props.data.user
 						? <span className="delete" onClick={() => deleteTweet()}>Delete</span>
 						: retweetOverride == null
@@ -120,17 +131,6 @@ export default function Tweet(props){
 					}
 				</a>
 
-				{/* likes */}
-				<a href='#'>
-					{likeOverride == null
-						? props.data.liked
-							?  <span onClick={() => dislikeTweet()}> ❤️ </span>
-							: <span onClick={() => likeTweet()}> ♡ </span>
-						: likeOverride
-							? <span onClick={() => dislikeTweet()}> ❤️ </span>
-							: <span onClick={() => likeTweet()}> ♡ </span>
-					}
-				</a>
 			</div>
 		)
 	}
@@ -138,6 +138,8 @@ export default function Tweet(props){
 	function tweetBody(){
 		return(
 			<div className='tweet'>
+
+				{/* profile picture for tweet user */}
 				<div className='tweetImage'>
 					<a href={'/user/' + props.data.user}>
 						<div className='imageWrapper'>
@@ -145,13 +147,18 @@ export default function Tweet(props){
 						</div>
 					</a>
 				</div>
+				
 				<div className='tweetText'>
 					<p><a href={'/user/' + props.data.user}><span className='username'>@{props.data.user}</span></a> • <span className='time'>{props.data.time}</span></p>
 					<p id='tweetContent'>{props.data.content}</p>
-					{props.data.isRetweet
+
+					{/* if this is the is an original render and is a retweet of something else... */}
+					{props.data.isRetweet && !props.omitIcons
 						? <Tweet username={props.username} data={props.data.retweetContent} omitIcons={true}/>
 						: null
 					}
+
+					{/* icons */}
 					{props.omitIcons
 						? null
 						: renderIcons()
